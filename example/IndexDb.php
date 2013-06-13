@@ -17,6 +17,10 @@ class IndexDb extends Indexes {
     }
 
     /**
+     * Przykładowe użycie
+     *
+     * php index.php db index
+     *
      * Typy pól:
      *
      * * Keyword    -   Dane które są przeszukiwane i przechowywane w indeksach, ale nie są dzielone na tokeny w indeksach. Przydatne do wyszukiwania danych typu ID lub adres URL.
@@ -26,6 +30,7 @@ class IndexDb extends Indexes {
      * * Binary     -   Dane które są dostępne, ale nie są przeszukiwane. Mogą być wykorzystane do przechowywania np. obrazków
      */
     public function index() {
+        //pobranie wszystkich produktów z bazy łącznie z kategoriami i dostawcami
         $query = "SELECT * FROM Products AS p JOIN Categories AS c ON p.CategoryID = c.CategoryId JOIN Suppliers AS s ON p.SupplierID = s.SupplierID";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
@@ -33,7 +38,9 @@ class IndexDb extends Indexes {
 
         $index = self::create(dirname(__FILE__) . '/' . self::INDEX_DIR);
 
+        //przetwarzanie rekordów z bazy
         foreach ($rows as $row) {
+            //stworzenie dokumentu i dodanie do niego wybranych pól (pole = kolumna w tabeli)
             $doc = new Zend_Search_Lucene_Document();
             $doc->addField(Zend_Search_Lucene_Field::keyword('ProductName', $row['ProductName']));
             $doc->addField(Zend_Search_Lucene_Field::text('Quantity', $row['QuantityPerUnit']));
@@ -45,7 +52,6 @@ class IndexDb extends Indexes {
 
             $index->addDocument($doc);
         }
-        $index->commit();
     }
 
     /**
@@ -65,7 +71,7 @@ class IndexDb extends Indexes {
         $results = $index->find($phrase);
 
         foreach ($results as $index => $hit) {
-            echo sprintf("[%s] : Score: %s\nProduct name: %s\nCategory : %s\n\n", $index, $hit->score, $hit->ProductName, $hit->Category);
+            echo sprintf("[%s] : Score: %s\nProduct name: %s\nCategory : %s\n", $index, $hit->score, $hit->ProductName, $hit->Category);
             echo "----------------------------\n";
         }
     }

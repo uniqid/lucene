@@ -1,4 +1,4 @@
 lucene
 ======
 
-zend search lucene example app
+zend search lucene standalone

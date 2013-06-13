@@ -10,10 +10,30 @@ class IndexTxt extends Indexes  {
 
     const INDEX_DIR = 'indexes_txt';
 
+    /**
+     * Zaimplementować: indeksowanie wszystkich plików z katalogu: input/txt
+     * Wykorzystać DirectoryIterator
+     *
+     * Przykładowe użycie
+     *
+     * php index.php txt index
+     *
+     * @return mixed|void
+     */
     public function index() {
 
     }
 
+    /**
+     * Zaimplementować: wyszukiwanie w utworzonych indeksach
+     *
+     * Przykładowe użycie
+     *
+     * php index.php txt search "Malaria"
+     *
+     * @param $phrase
+     * @return mixed|void
+     */
     public function search($phrase) {
 
     }
