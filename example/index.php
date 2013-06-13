@@ -28,6 +28,9 @@ switch ($argv[1]) {
     case 'db' :
         $indexer = new IndexDb();
         break;
+    case 'txt' :
+        $indexer = new IndexTxt();
+        break;
 }
 
 switch ($argv[2]) {
