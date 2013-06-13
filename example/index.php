@@ -11,30 +11,35 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 spl_autoload_register(function($className) {
     require_once (str_replace('_', '/', $className) . '.php');
-});
-define('INDEX_DIR', APPLICATION_PATH . '/indexes');
+});;
 
-class Indexes {
+require_once 'indexes.php';
+require_once 'IndexWordDocx.php';
+require_once 'IndexTxt.php';
 
-    public function __construct() {
-        Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-        Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-            new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8_CaseInsensitive()
-        );
-        Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-            new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
-        );
-    }
+if (count($argv) < 3) {
+    echo sprintf("Usage:\t php index.php type action [\"phrase\"]\n");
+    exit(-1);
+}
 
-    public static function create() {
-        Zend_Search_Lucene::create(INDEX_DIR);
-    }
+switch ($argv[1]) {
+    case 'docx' :
+        $indexer = new IndexWordDocx();
+        break;
+    case 'db' :
+        $indexer = new IndexDb();
+        break;
+}
 
-    public static function open() {
-        return Zend_Search_Lucene::open(INDEX_DIR);
-    }
-
-    public function indexWordDocuments() {
-        $inputDir = APPLICATION_PATH . '/input/doc/';
-    }
+switch ($argv[2]) {
+    case 'index' :
+        $indexer->index();
+        break;
+    case 'search' :
+        if (!isset($argv[3])) {
+            echo sprintf("Usage:\t php index.php type search \"phrase\"\n");
+            exit(-1);
+        }
+        $indexer->search($argv[3]);
+        break;
 }
