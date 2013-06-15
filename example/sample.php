@@ -26,6 +26,8 @@ class HelloLucene {
         self::addDoc($indexWriter, "Managing Gigabytes", "55063554A");
         self::addDoc($indexWriter, "The Art of Computer Science", "9900333X");
 
+        $indexWriter->commit();
+
         $query = Zend_Search_Lucene_Search_QueryParser::parse($phrase);
         $hitsLimit = 10;
         Zend_Search_Lucene::setResultSetLimit($hitsLimit);
@@ -35,7 +37,7 @@ class HelloLucene {
         print ("\nZnaleziono " . count($hits) . " wyników. \n\n");
         foreach ($hits as $i => $hit) {
             $document = $hit->getDocument();
-            print (($i + 1) . ". " . $document.getField("isbn") . "\t" . $document->title . "\t (score: " . $document->score . ")");
+            print (($i + 1) . ". " . $document->isbn . "\t" . $document->title . "\n");
         }
     }
 
