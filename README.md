@@ -1,4 +1,6 @@
-lucene
+Lucene
 ======
 
-zend search lucene standalone
+Zend search lucene standalone
+
+Support CJK
